@@ -1,0 +1,50 @@
+name: Release
+
+# Pushing a tag like v1.0.1 builds the Windows installer and attaches it to a GitHub release.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write   # needed to create the release and upload the installer
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build installer
+        shell: bash   # PowerShell would split the -c.publish.* options apart
+        # owner/repo are baked into the app from this repository, so auto-updates point at the right place
+        run: >
+          npx electron-builder --win nsis --x64 --publish never
+          -c.publish.provider=github
+          -c.publish.owner=${{ github.repository_owner }}
+          -c.publish.repo=${{ github.event.repository.name }}
+          -c.publish.releaseType=release
+
+      - name: Publish GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # a single upload: the installer plus the update metadata (latest.yml, blockmap) for auto-updates
+        run: >
+          gh release create "${{ github.ref_name }}"
+          dist/Lyrova-Setup.exe dist/Lyrova-Setup.exe.blockmap dist/latest.yml
+          --title "Lyrova ${{ github.ref_name }}"
+          --generate-notes

@@ -1,0 +1,139 @@
+/* Clock screen. --u = 1 % of the shorter screen side × size setting; --clock-rgb = chosen color. */
+#clock {
+  --u: 10px;
+  --clock-rgb: 255 255 255;
+  position: absolute;
+  inset: 5vmin calc(5vmin) calc(var(--inset-bottom) + 5vmin) calc(var(--inset-left) + 5vmin);
+  display: flex;
+  font-family: "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  color: rgb(var(--clock-rgb));
+}
+#clock[hidden] { display: none; }
+
+#clock-widget { display: flex; flex-direction: column; gap: calc(var(--u) * 1.1); max-width: 100%; }
+#clock-widget[data-pos="center"] { margin: auto; align-items: center; text-align: center; }
+#clock-widget[data-pos="top-left"] { margin: 0 auto auto 0; align-items: flex-start; text-align: left; }
+#clock-widget[data-pos="top-right"] { margin: 0 0 auto auto; align-items: flex-end; text-align: right; }
+#clock-widget[data-pos="bottom-left"] { margin: auto auto 0 0; align-items: flex-start; text-align: left; }
+#clock-widget[data-pos="bottom-right"] { margin: auto 0 0 auto; align-items: flex-end; text-align: right; }
+#clock-widget > :empty { display: none; }
+
+/* order: greeting, date, time, note, song (like a phone lock screen: date above the time) */
+.c-greeting { order: 0; font-size: calc(var(--u) * 2.8); font-weight: 500; opacity: 0.85; }
+.c-date { order: 1; font-size: calc(var(--u) * 3); font-weight: 600; opacity: 0.92; margin-bottom: calc(var(--u) * -0.6); }
+.c-time {
+  order: 2;
+  font-size: calc(var(--u) * 21);
+  font-weight: 200;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transform: scale(calc(1 + var(--bass) * 0.025 * var(--pulse-amt)));
+  text-shadow: 0 4px 40px rgb(0 0 0 / 0.25), 0 0 calc(var(--u) * 4 * var(--bass) * var(--glow-amt)) rgb(var(--accent-rgb) / 0.5);
+}
+.c-time .sec { font-size: 0.4em; opacity: 0.6; margin-left: 0.12em; }
+.c-note { order: 3; font-size: calc(var(--u) * 2.5); font-weight: 500; white-space: pre-line; max-width: calc(var(--u) * 80); opacity: 0.9; }
+.c-greeting, .c-date, .c-note { text-shadow: 0 2px 16px rgb(0 0 0 / 0.45); }
+
+/* song card: liquid glass */
+.c-song {
+  order: 4;
+  width: calc(var(--u) * 44);
+  max-width: 100%;
+  margin-top: calc(var(--u) * 1.4);
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 1.8);
+  border-radius: calc(var(--u) * 2.4);
+  background: rgb(255 255 255 / 0.11);
+  border: 1px solid rgb(255 255 255 / 0.2);
+  backdrop-filter: blur(26px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.32), 0 12px 40px rgb(0 0 0 / 0.3);
+  text-align: left;
+  font-size: calc(var(--u) * 1.8);
+  color: #fff;
+  box-sizing: border-box;
+}
+.c-song[hidden] { display: none; }
+.cs-head { display: flex; align-items: center; gap: calc(var(--u) * 1.1); }
+.cs-cover, .cs-icon { width: calc(var(--u) * 4.2); height: calc(var(--u) * 4.2); border-radius: calc(var(--u) * 1.1); flex: none; }
+.cs-cover { object-fit: cover; }
+.cs-cover[hidden], .cs-cover:not([hidden]) + .cs-icon { display: none; }
+.cs-icon { display: grid; place-items: center; background: rgb(255 255 255 / 0.16); }
+.cs-icon svg { width: 45%; height: 45%; fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.cs-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cs-title, .cs-artist { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cs-artist { opacity: 0.65; font-size: 0.86em; }
+.cs-bar { height: calc(var(--u) * 0.4); margin-top: calc(var(--u) * 1.2); border-radius: 99px; background: rgb(255 255 255 / 0.2); overflow: hidden; }
+.cs-bar i { display: block; height: 100%; width: 0; background: #fff; border-radius: inherit; }
+.cs-line { margin-top: calc(var(--u) * 1); font-weight: 600; line-height: 1.3; }
+.cs-line:empty { display: none; }
+.cs-line.swap { animation: line-in 0.45s ease; }
+@keyframes line-in { from { opacity: 0; transform: translateY(0.4em); } to { opacity: 1; transform: none; } }
+
+/* ── Styles ── */
+#clock-widget[data-style="glass"] {
+  padding: calc(var(--u) * 3) calc(var(--u) * 4.2) calc(var(--u) * 3.4);
+  border-radius: calc(var(--u) * 4);
+  background: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.22);
+  backdrop-filter: blur(30px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.36), 0 24px 70px rgb(0 0 0 / 0.35);
+}
+#clock-widget[data-style="glass"] .c-time { font-size: calc(var(--u) * 15); font-weight: 600; letter-spacing: -0.03em; }
+#clock-widget[data-style="glass"] .c-date { order: 3; margin: 0; font-weight: 500; }
+#clock-widget[data-style="glass"] .c-song { background: rgb(255 255 255 / 0.08); backdrop-filter: none; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2); }
+
+#clock-widget[data-style="flip"] .c-time { display: flex; gap: calc(var(--u) * 0.8); font-size: calc(var(--u) * 15); font-weight: 600; letter-spacing: 0; text-shadow: none; }
+.f-tile {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 0.72em;
+  height: 1.1em;
+  border-radius: 0.16em;
+  background: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.2);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.34), 0 0.06em 0.2em rgb(0 0 0 / 0.3);
+  overflow: hidden;
+}
+.f-tile::after { content: ""; position: absolute; left: 10%; right: 10%; top: 50%; height: 1px; background: rgb(0 0 0 / 0.25); }
+.f-tile.small { width: 0.5em; height: 0.78em; font-size: 0.6em; align-self: flex-end; }
+.f-tile span { display: block; line-height: 1; }
+.f-tile.turn span { animation: turn 0.42s cubic-bezier(0.3, 0.7, 0.3, 1); transform-origin: 50% 0; }
+@keyframes turn { from { transform: rotateX(-88deg); opacity: 0.2; } to { transform: none; opacity: 1; } }
+.f-colon { align-self: center; opacity: 0.7; font-size: 0.6em; }
+
+.analog { display: block; width: calc(var(--u) * 34); height: calc(var(--u) * 34); filter: drop-shadow(0 8px 30px rgb(0 0 0 / 0.35)); }
+.analog .face { fill: rgb(255 255 255 / 0.07); stroke: rgb(255 255 255 / 0.25); stroke-width: 1.2; }
+.analog .tick { stroke: rgb(var(--clock-rgb) / 0.3); stroke-width: 1.2; stroke-linecap: round; }
+.analog .tick.big { stroke: rgb(var(--clock-rgb) / 0.95); stroke-width: 3.4; }
+.analog .hand { stroke: rgb(var(--clock-rgb)); stroke-linecap: round; }
+.analog .hour { stroke-width: 6; }
+.analog .minute { stroke-width: 3.8; }
+.analog .second { stroke: rgb(var(--accent-rgb)); stroke-width: 1.6; }
+.analog .pin { fill: rgb(var(--accent-rgb)); }
+#clock-widget[data-style="analog"] .c-time { font-size: 0; line-height: 0; }
+
+#clock-widget[data-style="words"] .c-time { white-space: normal; font-size: calc(var(--u) * 9); font-weight: 300; line-height: 1.05; letter-spacing: -0.01em; max-width: calc(var(--u) * 90); }
+.w-lead { display: block; font-size: 0.36em; font-weight: 600; opacity: 0.6; margin-bottom: 0.15em; }
+.w-main b { font-weight: 700; }
+
+#clock-widget[data-style="pixel"] .c-time,
+#clock-widget[data-style="pixel"] .c-date,
+#clock-widget[data-style="pixel"] .c-greeting,
+#clock-widget[data-style="pixel"] .c-note {
+  font-family: "Pixelify Sans", "Segoe UI", sans-serif;
+  font-weight: 700;
+  color: color-mix(in srgb, rgb(var(--clock-rgb)) 75%, #c9b8ff);
+  text-shadow: 0.06em 0.06em 0 rgb(42 21 80);
+}
+#clock-widget[data-style="pixel"] .c-time { font-size: calc(var(--u) * 17); letter-spacing: 0.02em; }
+
+#clock-widget[data-style="neon"] .c-time,
+#clock-widget[data-style="neon"] .c-date,
+#clock-widget[data-style="neon"] .c-greeting {
+  color: #fff;
+  text-shadow: 0 0 0.03em #fff, 0 0 0.1em rgb(var(--accent-rgb)), 0 0 0.3em rgb(var(--accent-rgb) / calc(0.6 + var(--bass) * 0.3));
+}
+#clock-widget[data-style="neon"] .c-time.flicker { animation: neon-on 0.9s steps(1); }

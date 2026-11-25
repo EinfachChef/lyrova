@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' file: data:; media-src 'self' file:; font-src 'self'">
+  <title>Lyrova</title>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="clock.css">
+</head>
+<body>
+  <!-- Everything inside the scene shakes slightly with the bass -->
+  <div id="scene">
+    <!-- 1: background (animation, image, video or blurred album cover) -->
+    <div id="bg"></div>
+    <div id="dim"></div>
+
+    <!-- 2: bass sparks -->
+    <canvas id="particles"></canvas>
+
+    <!-- 3a: lyrics (role "lyrics") -->
+    <main id="stage" data-position="center">
+      <div id="lyrics"></div>
+      <div id="float"></div>
+      <div id="message" hidden>
+        <div class="msg-title"></div>
+        <div class="msg-hint"></div>
+      </div>
+    </main>
+
+    <!-- 3b: clock screen (role "clock") -->
+    <section id="clock" hidden>
+      <div id="clock-widget" data-style="modern" data-pos="center">
+        <div class="c-greeting"></div>
+        <div class="c-date"></div>
+        <div class="c-time"></div>
+        <div class="c-note"></div>
+        <div class="c-song" hidden>
+          <div class="cs-head">
+            <img class="cs-cover" alt="" hidden>
+            <span class="cs-icon" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M5 11V2.8l6-1.3v7.7"/><circle cx="3.5" cy="11" r="1.6"/><circle cx="9.5" cy="9.3" r="1.6"/></svg></span>
+            <span class="cs-text"><b class="cs-title"></b><span class="cs-artist"></span></span>
+          </div>
+          <div class="cs-bar"><i></i></div>
+          <div class="cs-line"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- glowing border, pulses with the bass (does not shake) -->
+  <div id="edge"></div>
+
+  <!-- 4: song info (glass capsule, bottom left) -->
+  <aside id="songinfo" hidden>
+    <img class="si-cover" alt="" hidden>
+    <div class="si-text">
+      <div class="si-line"><b class="si-title"></b><span class="si-artist"></span></div>
+      <div class="si-bar"><i></i></div>
+    </div>
+    <span class="si-time"></span>
+  </aside>
+
+  <script src="../common/lrc.js"></script>
+  <script src="../common/words.js"></script>
+  <script src="backgrounds.js"></script>
+  <script src="effects.js"></script>
+  <script src="lyrics-view.js"></script>
+  <script src="clock.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{
+  "name": "lyrova",
+  "productName": "Lyrova",
+  "version": "1.0.0",
+  "description": "Animated Windows desktop wallpaper that shows time-synced lyrics of the song you are playing.",
+  "main": "src/main/index.js",
+  "author": "Georg",
+  "license": "MIT",
+  "homepage": "https://github.com/EinfachChef/lyrova",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EinfachChef/lyrova.git"
+  },
+  "scripts": {
+    "postinstall": "node node_modules/electron/install.js",
+    "start": "electron .",
+    "start:window": "electron . --window",
+    "test": "node --test \"test/*.test.js\"",
+    "dist": "electron-builder --win nsis --x64 --publish never",
+    "release": "electron-builder --win nsis --x64 --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2",
+    "koffi": "^3.3.7"
+  },
+  "devDependencies": {
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "app.lyrova.desktop",
+    "productName": "Lyrova",
+    "copyright": "Copyright © 2026 Georg",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "package.json",
+      "assets/**/*",
+      "src/**/*"
+    ],
+    "asarUnpack": [
+      "**/node_modules/@koromix/**"
+    ],
+    "npmRebuild": false,
+    "nodeGypRebuild": false,
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "icon": "assets/icon.ico",
+      "executableName": "Lyrova"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Lyrova",
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "include": "build/installer.nsh",
+      "artifactName": "Lyrova-Setup.${ext}"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "EinfachChef",
+        "repo": "lyrova",
+        "releaseType": "release"
+      }
+    ]
+  }
+}
